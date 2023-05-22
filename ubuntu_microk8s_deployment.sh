@@ -36,8 +36,8 @@ sudo snap install microk8s --classic --channel 1.27
 sudo microk8s status --wait-ready
 sudo microk8s kubectl wait --namespace metallb-system --for=condition=Available deployment/controller
 sudo microk8s kubectl wait pod --namespace=metallb-system --selector=app=metallb --for=condition=Ready --timeout=5m
-sudo microk8s kubectl create namespace argocd
+sudo microk8s kubectl create namespace "${argocd_namespace}"
 sudo microk8s kubectl apply -f "${argocd_install_manifest}" --namespace="${argocd_namespace}"
 sudo microk8s kubectl wait --for=condition=Available deployment/argocd-server --timeout=5m
-sudo microk8s kubectl apply -f https://raw.githubusercontent.com/bthode/kafkagram-argocd/main/argocd-manifest.yaml --namespace="${argocd_namespace}"
 sudo microk8s kubectl apply -f "${argo_applicaiton}" --namespace="${argocd_namespace}"
+
