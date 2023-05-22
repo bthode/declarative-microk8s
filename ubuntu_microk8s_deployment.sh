@@ -12,12 +12,12 @@ echo 'alias k="sudo microk8s kubectl"' >> ~/.zshrc
 
 
 # Update apt to trust Google
-curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg  \\n| sudo gpg --dearmor -o /usr/share/keyrings/google.gpg
+curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/google.gpg
 # Add Kubernetes repo to apt
 echo "deb [signed-by=/usr/share/keyrings/google.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-
+sudo apt update
 # Install some common k8 tools
-sudo apt install -y kubectl kubeadm k9s kubelet
+sudo apt install -y kubectl kubeadm kubelet
 
 
 # Microk8s / ArgoCD Setup
