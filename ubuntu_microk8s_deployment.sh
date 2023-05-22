@@ -41,3 +41,6 @@ sudo microk8s kubectl apply -f "${argocd_install_manifest}" --namespace="${argoc
 sudo microk8s kubectl wait --for=condition=Available deployment/argocd-server --timeout=5m
 sudo microk8s kubectl apply -f "${argo_applicaiton}" --namespace="${argocd_namespace}"
 
+# login with admin user and below token (ignore an ending '%'):
+sudo microk8s kubectl --namespace="${argocd_namespace}" get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode && echo
+
