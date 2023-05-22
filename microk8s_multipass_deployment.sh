@@ -21,6 +21,13 @@ multipass exec "${vm_name}" -- sudo cp "${tmp_path}" "${launch_configuration_pat
 multipass exec "${vm_name}" -- sudo snap install microk8s --classic --channel 1.27
 multipass exec "${vm_name}" -- sudo microk8s status --wait-ready
 multipass exec "${vm_name}" -- sudo microk8s kubectl wait --namespace metallb-system --for=condition=Available deployment/controller
+multipass exec "${vm_name}" -- sudo microk8s kubectl wait pod --namespace=metallb-system --selector=app=metallb --for=condition=Ready --timeout=5m
 
-multipass exec "${vm_name}" -- sudo microk8s kubectl apply -f "${argocd_install_manifest}"
+# Need to find a way for metallb to actually be ready.
+sleep 15
+
+multipass exec "${vm_name}" -- sudo microk8s kubectl create namespace argocd
+multipass exec "${vm_name}" -- sudo microk8s kubectl apply -f "${argocd_install_manifest}" --namespace=argocd
 multipass exec "${vm_name}" -- sudo microk8s kubectl wait --for=condition=Available deployment/argocd-server --timeout=5m
+
+multipass exec "${vm_name}" -- sudo microk8s kubectl apply -f https://raw.githubusercontent.com/bthode/kafkagram-argocd/main/argocd-manifest.yaml --namespace=argocd
