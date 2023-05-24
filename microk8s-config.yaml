@@ -3,14 +3,17 @@
 version: 0.1.0
 addons:
   - name: dns
+  - name: community
   - name: rbac
   - name: ingress
   - name: hostpath-storage
-  - name: registry
   - name: observability
   - name: metallb
     args: [10.1.1.200-10.1.1.254]
   - name: cert-manager
+  - name: helm
+  - name: argocd
+  - name: fluentd
 
 # The extra arguments listed here are not required, as they would be set by the 'rbac' and the 'dns'
 # addons respectively. However, we set them to save time by not having to restart the Kubernetes
