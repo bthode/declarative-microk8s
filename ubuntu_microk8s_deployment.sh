@@ -27,7 +27,8 @@ export launch_configuration_name=".microk8s.yaml"
 export launch_configuration_path="${launch_configuration_dir}${launch_configuration_name}"
 export argocd_install_manifest="https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/install.yaml"
 export argocd_namespace="argocd"
-export argo_applicaiton="https://raw.githubusercontent.com/bthode/kafkagram-argocd/main/argocd-manifest.yaml"
+export argocd_management="https://raw.githubusercontent.com/bthode/microk8s-argocd/master/argocd-manifest.yaml"
+export kafkagram_applicaiton="https://raw.githubusercontent.com/bthode/kafkagram-argocd/main/argocd-manifest.yaml"
 
 sudo mkdir -p "${launch_configuration_dir}"
 sudo cp "${local_launch_configuration}" "${launch_configuration_path}"
@@ -39,8 +40,9 @@ sudo microk8s kubectl wait pod --namespace=metallb-system --selector=app=metallb
 sudo microk8s kubectl create namespace "${argocd_namespace}"
 sudo microk8s kubectl apply -f "${argocd_install_manifest}" --namespace="${argocd_namespace}"
 sudo microk8s kubectl wait --for=condition=Available deployment/argocd-server --timeout=5m
-sudo microk8s kubectl apply -f "${argo_applicaiton}" --namespace="${argocd_namespace}"
+
+sudo microk8s kubectl apply -f "${argocd_management}" --namespace="${argocd_namespace}"
+sudo microk8s kubectl apply -f "${kafkagram_applicaiton}" --namespace="${argocd_namespace}"
 
 # login with admin user and below token (ignore an ending '%'):
 sudo microk8s kubectl --namespace="${argocd_namespace}" get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode && echo
-
